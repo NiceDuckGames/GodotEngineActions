@@ -1,0 +1,149 @@
+[
+	{
+		"command_name": "create_scene",
+		"params": [
+			{"name": "root_type", "type": "String"},
+			{"name": "root_name", "type": "String"},
+			{"name": "file_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "add_node",
+		"params": [
+			{"name": "parent_path", "type": "String"},
+			{"name": "node_type", "type": "String"},
+			{"name": "node_name", "type": "String"}
+		]
+	},
+	{
+		"command_name": "set_property",
+		"params": [
+			{"name": "node_path", "type": "String"},
+			{"name": "property_path", "type": "String"},
+			{"name": "value", "type": "Variant"}
+		]
+	},
+	{
+		"command_name": "get_builtin_resource",
+		"params": [
+			{"name": "node_path", "type": "String"},
+			{"name": "property_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "create_script",
+		"params": [
+			{"name": "file_path", "type": "String"},
+			{"name": "script_text", "type": "String"}
+		]
+	},
+	{
+		"command_name": "attach_script",
+		"params": [
+			{"name": "node_path", "type": "String"},
+			{"name": "script_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "open_scene",
+		"params": [
+			{"name": "file_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "save_scene",
+		"params": []
+	},
+	{
+		"command_name": "add_scene",
+		"params": [
+			{"name": "scene_path", "type": "String"},
+			{"name": "parent_path", "type": "String"},
+			{"name": "node_name", "type": "String"}
+		]
+	},
+	{
+		"command_name": "delete_node",
+		"params": [
+			{"name": "node_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "create_resource",
+		"params": [
+			{"name": "resource_type", "type": "String"}
+		]
+	},
+	{
+		"command_name": "edit_resource",
+		"params": [
+			{"name": "resource", "type": "Resource"},
+			{"name": "property_path", "type": "String"},
+			{"name": "value", "type": "Variant"}
+		]
+	},
+	{
+		"command_name": "edit_resource_from_path",
+		"params": [
+			{"name": "resource_path", "type": "String"},
+			{"name": "property_path", "type": "String"},
+			{"name": "value", "type": "Variant"}
+		]
+	},
+	{
+		"command_name": "load_resource",
+		"params": [
+			{"name": "file_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "edit_script",
+		"params": [
+			{"name": "script_path", "type": "String"},
+			{"name": "line", "type": "int"},
+			{"name": "column", "type": "int"}
+		]
+	},
+	{
+		"command_name": "set_current_script_text",
+		"params": [
+			{"name": "script_text", "type": "String"}
+		]
+	},
+	{
+		"command_name": "append_to_current_script",
+		"params": [
+			{"name": "append_text", "type": "String"}
+		]
+	},
+	{
+		"command_name": "change_node_type",
+		"params": [
+			{"name": "node_path", "type": "String"},
+			{"name": "to_type", "type": "String"}
+		]
+	},
+	{
+		"command_name": "connect_signal",
+		"params": [
+			{"name": "from_path", "type": "String"},
+			{"name": "to_path", "type": "String"},
+			{"name": "signal_name", "type": "String"},
+			{"name": "method_name", "type": "String"}
+		]
+	},
+	{
+		"command_name": "run_project",
+		"params": []
+	},
+	{
+		"command_name": "run_current_scene",
+		"params": []
+	},
+	{
+		"command_name": "run_scene_from_file",
+		"params": [
+			{"name": "file_path", "type": "String"}
+		]
+	}
+]

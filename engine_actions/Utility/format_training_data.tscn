@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ci0ddbl0nok5v"]
+
+[ext_resource type="Script" path="res://addons/engine_actions/Utility/format_training_data.gd" id="1_34ite"]
+
+[node name="FormatTrainingData" type="Node"]
+script = ExtResource("1_34ite")

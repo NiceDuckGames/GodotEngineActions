@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwcgenxv757k5"]
+
+[ext_resource type="Script" path="res://addons/engine_actions/UI/command_item_parameter.gd" id="1_22y7p"]
+
+[node name="CommandItemParameter" type="VBoxContainer"]
+size_flags_horizontal = 3
+script = ExtResource("1_22y7p")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Param Name:"
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 2
+
+[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwwv6k3411u6h"]
+
+[ext_resource type="Texture2D" uid="uid://c7fhs2pabb2ej" path="res://addons/godot_sense/ui/GodotSenseIcon.png" id="1_c5olo"]
+[ext_resource type="Texture2D" uid="uid://bbq6rmdcn14lh" path="res://addons/godot_sense/ui/GodotSenseIconPressed.png" id="2_mawi8"]
+[ext_resource type="Script" path="res://addons/godot_sense/ui/Indicator.gd" id="3_lrqir"]
+[ext_resource type="PackedScene" path="res://addons/godot_sense/ui/manage_listeners.tscn" id="4_ta5sk"]
+
+[node name="GodotSenseIndicator" type="TextureButton"]
+offset_right = 32.0
+offset_bottom = 32.0
+toggle_mode = true
+texture_normal = ExtResource("1_c5olo")
+texture_pressed = ExtResource("2_mawi8")
+stretch_mode = 3
+script = ExtResource("3_lrqir")
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+size = Vector2i(177, 35)
+item_count = 1
+item_0/text = "   Manage Listeners"
+item_0/id = 0
+
+[node name="ManageListeners" parent="." instance=ExtResource("4_ta5sk")]
+visible = false
+
+[connection signal="toggled" from="." to="." method="_on_toggled"]
+[connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

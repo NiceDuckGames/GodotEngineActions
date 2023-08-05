@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3 uid="uid://b2fdtq6imueg2"]
+
+[ext_resource type="Script" path="res://addons/engine_actions/UI/ducky_command_palette.gd" id="1_brce3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6p3o8"]
+bg_color = Color(0.129412, 0.129412, 0.129412, 1)
+
+[node name="DuckyCommandPalette" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_brce3")
+
+[node name="Popup" type="Popup" parent="."]
+initial_position = 2
+title = "Ducky"
+size = Vector2i(410, 300)
+borderless = false
+
+[node name="PanelContainer" type="PanelContainer" parent="Popup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Popup/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VSplitContainer" type="VSplitContainer" parent="Popup/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Popup/PanelContainer/MarginContainer/VSplitContainer"]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_6p3o8")
+scroll_following = true
+
+[node name="PromptInput" type="LineEdit" parent="Popup/PanelContainer/MarginContainer/VSplitContainer"]
+custom_minimum_size = Vector2(400, 30)
+layout_mode = 2
+size_flags_vertical = 8
+placeholder_text = "What should I do?"
+caret_blink = true
+caret_blink_interval = 0.5
+
+[connection signal="text_submitted" from="Popup/PanelContainer/MarginContainer/VSplitContainer/PromptInput" to="." method="_on_prompt_input_text_submitted"]
