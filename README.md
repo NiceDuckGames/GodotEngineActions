@@ -6,4 +6,5 @@ This plugin has a couple of plugins from our Plugin Development Suite as depende
 
 
 https://github.com/NiceDuckGames/GodotSense
+
 https://github.com/NiceDuckGames/GDVN
