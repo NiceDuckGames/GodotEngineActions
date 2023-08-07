@@ -3,5 +3,7 @@ EngineActions is a plugin for the Godot Game Engine that allows the user to reco
 
 ## Dependencies
 This plugin has a couple of plugins from our Plugin Development Suite as dependencies. Specifically GodotSense and GDVN. These are included in this repo, and should not require separate installation. The instructions for these plugins can be found in their own repositories here:
+
+
 https://github.com/NiceDuckGames/GodotSense
 https://github.com/NiceDuckGames/GDVN
