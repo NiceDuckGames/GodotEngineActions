@@ -17,6 +17,9 @@ func _enter_tree():
 	add_autoload_singleton("EngineCommands", engine_commands_autoload_path)
 	add_autoload_singleton("EngineActionDB", engine_action_db_autoload_path)
 	add_autoload_singleton("ActionRecorder", action_recorder_path)
+
+
+func _ready() -> void:
 	
 	action_editor_instance = action_editor_res.instantiate()
 	get_editor_interface().get_editor_main_screen().add_child(action_editor_instance)
