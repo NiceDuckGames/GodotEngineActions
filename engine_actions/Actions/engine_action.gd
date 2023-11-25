@@ -39,10 +39,15 @@ var num_commands = 0
 ## The index of the command that is currently being executed.
 var current_command_id = 0
 
+## Whether or not the command is paused.
 var is_paused: bool = false
+## Whether or not the command is scheduled to end execution.
 var should_stop: bool = false
 
+signal paused
 signal unpause
+signal stopped
+signal command_complete(command_index)
 
 
 func _init(commands: Array):
@@ -69,28 +74,41 @@ func append_command(command: Dictionary):
 ## advancing to the next one so the editor has time to update everything.
 func execute_action():
 	
+	if EngineCommands.is_action_executing(): 
+		printerr("Cannot execute more than one EngineAction at a time.")
+	
+	EngineCommands.begin_action_execution(self)
+	
 	for command_id in command_list:
-		
-		if is_paused:
-			await unpause
-			
-		if should_stop:
-			return
 		
 		current_command_id = command_id
 		
-		var command = command_list[command_id]
+		if is_paused:
+			emit_signal("paused")
+			await unpause
+			
+		if should_stop:
+			emit_signal("stopped")
+			return
+		
+		var command = command_list[current_command_id]
 		var params = parse_parameters(command.params)
 		
-		local_cache[command_id] = EngineCommands.callv(command.command_name, params)
+		local_cache[current_command_id] = EngineCommands.callv(command.command_name, params)
 		
 		await EngineCommands.command_complete
+		
+		emit_signal("command_complete", current_command_id)
+	
+	EngineCommands.end_action_execution()
 
 
+## Schedules the action to pause execution after the next command.
 func pause():
 	is_paused = true
 
 
+## Resumes execution if the action is currently paused.
 func resume():
 	
 	if is_paused:
@@ -99,8 +117,13 @@ func resume():
 		is_paused = false
 
 
+## Schedules the action to stop execution after the next command.
 func stop():
 	should_stop = true
+
+
+func get_current_command() -> Dictionary:
+	return command_list[current_command_id]
 
 
 ## Goes through the parameter values for a single command

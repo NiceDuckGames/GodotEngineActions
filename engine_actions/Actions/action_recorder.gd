@@ -10,13 +10,16 @@ var save_action_dialog_res = preload("res://addons/engine_actions/UI/save_action
 var save_action_dialog = null
 
 
+## Called by the MainScreen "Actions" scene (actions_main_screen.gd)
+## in order to provide this script with a reference to the EditorPlugin.
+## Is used instead of `_ready()` since the moajority of this script
+## relies upon the EditorPlugin reference.
 func setup(plugin: EditorPlugin):
 	
 	editor_plugin = plugin
 	editor_inspector = plugin.get_editor_interface().get_inspector()
 	
 	GodotSense.connect("property_changed", self._on_node_property_changed)
-	GodotSense.connect("shortcut_activated", self._on_editor_shorctut_activated)
 	GodotSense.connect("node_added", self._on_node_created)
 	GodotSense.connect("node_moved", self._on_node_moved)
 	GodotSense.connect("node_deleted", self._on_node_deleted)
@@ -31,6 +34,35 @@ func setup(plugin: EditorPlugin):
 	add_child(save_action_dialog)
 
 
+func start_recording():
+	
+	print("Recording Actions....")
+	
+	GodotSense.begin()
+	
+	editor_plugin.get_editor_interface().get_editor_settings().set_setting("interface/inspector/open_resources_in_current_inspector", false)
+	current_action_recording = EngineAction.new([])
+	is_recording = true
+
+
+func stop_recording():
+	
+	print("Recording Stopped...")
+	
+	GodotSense.end()
+	
+	editor_plugin.get_editor_interface().get_editor_settings().set_setting("interface/inspector/open_resources_in_current_inspector", true)
+	is_recording = false
+	
+	save_action_dialog.popup_centered()
+
+
+func save_current_action(action_name: String):
+	
+	EngineActionDB.save_engine_action(current_action_recording, action_name, true)
+
+
+## Checks if a Resource has previously been saved.
 func is_resource_saved(resource: Resource):
 	
 	var object_path: String = resource.resource_path
@@ -42,6 +74,8 @@ func is_resource_saved(resource: Resource):
 		return false
 
 
+## Gets the path to a Node from the root of the
+## currently edited scene tree.
 func get_path_to_scene_node(node: Node):
 	var scene_root = editor_plugin.get_editor_interface().get_edited_scene_root()
 	var node_path = scene_root.get_path_to(node)
@@ -49,26 +83,14 @@ func get_path_to_scene_node(node: Node):
 	return node_path
 
 
-func _on_editor_shorctut_activated(key_code: String, shortcut_name: String):
-	
-	if !is_recording: return
-	print("shortcut activated")
-	match shortcut_name:
-		
-		"Save":
-			
-			var current_scene_filepath = editor_plugin.get_editor_interface().get_edited_scene_root().scene_file_path
-			
-			if current_scene_filepath == "": return
-#
-#			var command = EngineCommands.generate_command("save_scene", [""])
-#			current_action_recording.append_command(command)
+######### Listeners #########
 
 
+## Listens for changes in the properties of Nodes in the currently edited scene tree.
 func _on_node_property_changed(node: Node, property_path: String, value: Variant, type: int):
 	
 	if !is_recording: return
-	print("node property changed")
+	
 	var node_path = get_path_to_scene_node(node)
 	
 	match type:
@@ -104,10 +126,11 @@ func _on_node_property_changed(node: Node, property_path: String, value: Variant
 			current_action_recording.append_command(command)
 
 
+## Listens for new resources being created in the file system.
 func _on_resource_created(file_path: String, resource: Resource):
 	
 	if !is_recording: return
-	print("resource created " + file_path)
+	
 	if resource is Script:
 		
 		var command = EngineCommands.generate_command("create_script", [file_path, resource.source_code])
@@ -141,10 +164,11 @@ func _on_resource_created(file_path: String, resource: Resource):
 		current_action_recording.append_command(command2)
 
 
+## Listens for changes to resources in the file system.
 func _on_resource_changed(file_path: String, resource: Resource):
 	
 	if !is_recording: return
-	print("resource changed " + file_path)
+	
 	if resource is Script:
 		
 		if editor_plugin.get_editor_interface().get_script_editor().get_current_script() == resource:
@@ -166,10 +190,11 @@ func _on_resource_changed(file_path: String, resource: Resource):
 		current_action_recording.append_command(command)
 
 
+## Listens for changes to the properties of Resources being edited in the Inspector.
 func _on_resource_property_changed(object, value, object_path, node_path, prop_path, property_name):
 	
 	if !is_recording: return
-	print("resource property changed")
+	
 	if value is Resource:
 		
 		if is_resource_saved(value):
@@ -199,6 +224,7 @@ func _on_resource_property_changed(object, value, object_path, node_path, prop_p
 			current_action_recording.append_command(command)
 
 
+## Listens for Nodes being created in the currently edited scene tree.
 func _on_node_created(node: Node):
 	
 	if !is_recording: return
@@ -216,8 +242,6 @@ func _on_node_created(node: Node):
 	if node.scene_file_path != scene_root.scene_file_path:
 		return
 	
-	print("node created")
-	
 	var parent_node = editor_plugin.get_editor_interface().get_selection().get_selected_nodes()[0].get_parent()
 	var parent_path = scene_root.get_path_to(parent_node)
 	
@@ -225,10 +249,10 @@ func _on_node_created(node: Node):
 	current_action_recording.append_command(command)
 
 
+## Listens for Nodes moving in the currently edited scene tree.
 func _on_node_moved(prev_path: String, node: Node):
 	
 	if !is_recording: return
-	print("node moved")
 	
 	var context = editor_plugin.get_editor_interface().get_edited_scene_root()
 	var new_path = context.get_path_to(node)
@@ -237,69 +261,38 @@ func _on_node_moved(prev_path: String, node: Node):
 	current_action_recording.append_command(command)
 
 
+## Listens for Node being deleted in the currently edited scene tree.
 func _on_node_deleted(node_path: String):
 	
 	if !is_recording: return
-	
-	print("node deleted")
 	
 	var command = EngineCommands.generate_command("delete_node", [node_path])
 	current_action_recording.append_command(command)
 
 
+## Listens for Nodes having their type changed in the currently edited scene tree.
 func _on_node_type_changed(node_path: String, from_type: String, to_type: String):
 	
 	if !is_recording: return
-	
-	print("node type changed")
 	
 	var command = EngineCommands.generate_command("change_node_type", [node_path, to_type])
 	current_action_recording.append_command(command)
 
 
+## Listens for signals being connected in the currently edited scene tree.
 func _on_signal_connected(from_path: String, to_path: String, signal_name: String, method_name: String):
 	
 	if !is_recording: return
-	
-	print("signal connected")
 	
 	var command = EngineCommands.generate_command("connect_signal", [from_path, to_path, signal_name, method_name])
 	current_action_recording.append_command(command)
 
 
+## Listens for scenes being instanced in the currently edited scene tree.
 func _on_scene_added(scene_filepath: String, parent_path: String, node_name: String):
 	
 	if !is_recording: return
 	
-	print("scene added")
-	
 	var command = EngineCommands.generate_command("add_scene", [scene_filepath, parent_path, node_name])
 	current_action_recording.append_command(command)
 
-
-func start_recording():
-	
-	print("recording actions....")
-	
-	GodotSense.begin()
-	
-	editor_plugin.get_editor_interface().get_editor_settings().set_setting("interface/inspector/open_resources_in_current_inspector", false)
-	current_action_recording = EngineAction.new([])
-	is_recording = true
-
-
-func stop_recording():
-	
-	print("recording stopped...")
-	
-	GodotSense.end()
-	
-	editor_plugin.get_editor_interface().get_editor_settings().set_setting("interface/inspector/open_resources_in_current_inspector", true)
-	is_recording = false
-	
-	save_action_dialog.popup_centered()
-
-
-func save_current_action(action_name: String):
-	
-	EngineActionDB.save_engine_action(current_action_recording, action_name, true)

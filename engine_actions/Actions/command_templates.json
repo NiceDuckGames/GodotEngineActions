@@ -52,7 +52,9 @@
 	},
 	{
 		"command_name": "save_scene",
-		"params": []
+		"params": [
+			{"name": "file_path", "type": "String"}
+		]
 	},
 	{
 		"command_name": "add_scene",
@@ -130,6 +132,20 @@
 			{"name": "to_path", "type": "String"},
 			{"name": "signal_name", "type": "String"},
 			{"name": "method_name", "type": "String"}
+		]
+	},
+	{
+		"command_name": "move_node",
+		"params": [
+			{"name": "from_path", "type": "String"},
+			{"name": "to_path", "type": "String"}
+		]
+	},
+	{
+		"command_name": "save_resource",
+		"params": [
+			{"name": "file_path", "type": "String"},
+			{"name": "resource", "type": "Resource"}
 		]
 	},
 	{

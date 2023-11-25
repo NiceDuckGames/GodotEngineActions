@@ -1,14 +1,25 @@
 @tool
 extends Node
 
-## TO USE: Open the .tscn file with the same name, 
+
+## This script is used to format Action templates into
+## the JSONL format for compatibility with the
+## NiceDuckGames training dataset.
+##
+## https://github.com/NiceDuckGames/DuckyCommandDataset
+
+## TO USE: Open the .tscn file with the same name,
+##         select the root node of the scene,
 ##         and click the "Activate" boolean to format
 ##         and export the training data.
 
 @export var activate: bool = false:
 	set = set_activate, get = get_activate
 
+## Path to the Action templates that you would like to format.
 @export var templates_file_path: String = ""
+
+## Path to the output file.
 @export var new_file_name: String = ""
 
 

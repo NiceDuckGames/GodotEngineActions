@@ -66,12 +66,6 @@
             ]
         },
         {
-            "command_name": "save_scene",
-            "params": [
-
-            ]
-        },
-        {
             "command_name": "add_node",
             "params": [
                 ".",
@@ -96,7 +90,7 @@
         {
             "command_name": "save_scene",
             "params": [
-
+                ""
             ]
         }
     ],
@@ -198,9 +192,7 @@
         },
         {
             "command_name": "save_scene",
-            "params": [
-
-            ]
+            "params": []
         }
     ],
     "Run a scene": [
@@ -377,6 +369,16 @@
             "command_name": "save_scene",
             "params": [
                 ""
+            ]
+        }
+    ],
+    "test int": [
+        {
+            "command_name": "edit_script",
+            "params": [
+                "res://test.gd",
+                "int(11)",
+                "int(5)"
             ]
         }
     ]

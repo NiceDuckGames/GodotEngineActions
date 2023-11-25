@@ -4,13 +4,16 @@ extends MarginContainer
 var command_param_res = preload("res://addons/engine_actions/UI/command_item_parameter.tscn")
 var normal_theme_res = preload("res://addons/engine_actions/UI/Themes/action_command_item_normal.tres")
 var hover_theme_res = preload("res://addons/engine_actions/UI/Themes/action_command_item_hover.tres")
+var playing_theme_res = preload("res://addons/engine_actions/UI/Themes/action_command_item_playing.tres")
+var paused_theme_res = preload("res://addons/engine_actions/UI/Themes/action_command_item_paused.tres")
+var stopped_theme_res = preload("res://addons/engine_actions/UI/Themes/action_command_item_stopped.tres")
 
 
-@onready var command_name_label = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/CommandName
-@onready var param_item_container = $MarginContainer/MarginContainer/VBoxContainer
+@onready var command_name_label: Label
+@onready var param_item_container: VBoxContainer
+@onready var re_index_spin_box: SpinBox
+@onready var re_index_button: Button
 
-@onready var re_index_spin_box: SpinBox = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/ReIndexValue
-@onready var re_index_button: Button = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/ReIndexButton
 
 ## The name of the command associated with this ui element
 var command_name_string: String = ""
@@ -22,42 +25,21 @@ var param_values: Array = []
 ## The index of this command in the currently edited action's command list
 var item_index: int = 0
 
-var is_selected: bool = false
-var is_hovered: bool = false
+## Whether this command is currently being executed during playback
+## in the action editor. Prevents the user from changing this command
+## during execution.
+var is_playing: bool = false
 
 ## Emitted when the value of a parameter is changed
 signal param_value_changed(param_values, index)
 ## Emitted when this command's delete button is pressed
 signal command_deleted(index)
-
+## Emitted when this command's index within the command list is changed
 signal index_changed(old_index, new_index)
-
-signal selected(index)
 
 
 func _ready():
 	focus_mode = Control.FOCUS_ALL
-	
-
-func _gui_input(event):
-	
-	if is_hovered && event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT && !event.is_pressed():
-			
-			is_selected = !is_selected
-			
-			if is_selected:
-				emit_signal("selected", item_index)
-
-
-func _process(delta):
-	
-	if !$MarginContainer.get_global_rect().has_point(get_global_mouse_position()):
-		if is_hovered:
-			_on_mouse_exited()
-	else:
-		if !is_hovered:
-			_on_mouse_entered()
 
 
 ## Called when a parameter text field has its value changed
@@ -84,9 +66,8 @@ func set_item_index(new_index: int):
 	re_index_spin_box.set_value_no_signal(new_index)
 
 
-
 ## Update the value of the param at the given index
-func set_param_value(param_index: int, param_value: String):
+func set_param_value(param_index: int, param_value: Variant):
 	
 	if param_values.is_empty(): return
 	
@@ -97,10 +78,10 @@ func set_param_value(param_index: int, param_value: String):
 ## Set up the ui elements for this command
 func set_data(command_name: String, param_templates: Array, index: int):
 	
-	command_name_label = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/CommandName
-	param_item_container = $MarginContainer/MarginContainer/VBoxContainer
-	re_index_spin_box = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/ReIndexValue
-	re_index_button = $MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/ReIndexButton
+	command_name_label = $MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/CommandName
+	param_item_container = $MarginContainer/HBoxContainer/MarginContainer/VBoxContainer
+	re_index_spin_box = $MarginContainer/HBoxContainer/ReIndexValue
+	re_index_button = $MarginContainer/HBoxContainer/ReIndexButton
 	
 	item_index = index
 	command_name_string = command_name
@@ -116,32 +97,65 @@ func set_data(command_name: String, param_templates: Array, index: int):
 		
 		var param_item = command_param_res.instantiate()
 		param_item.set_data(param.name, i)
+
 		param_item.connect("value_changed", self._on_param_value_changed)
 		
 		param_items.push_back(param_item)
 		
 		param_item_container.add_child(param_item)
 		
+		param_item.call_deferred("set_type", EngineActionDB.type_enum_from_string(param.type))
+		
 		i += 1
 
 
+## Changes the maximum value of the re-index spinbox in the UI
+## to prevent users from setting it out of range.
 func set_max_index(max: int):
 	re_index_spin_box.max_value = max
 
 
+func stopped_highlight():
+	$MarginContainer["theme_override_styles/panel"] = stopped_theme_res
+	grab_focus()
+
+func paused_highlight():
+	$MarginContainer["theme_override_styles/panel"] = paused_theme_res
+	grab_focus()
+
+func playing_highlight():
+	$MarginContainer["theme_override_styles/panel"] = playing_theme_res
+	grab_focus()
+
+func hover_highlight():
+	$MarginContainer["theme_override_styles/panel"] = hover_theme_res
+	grab_focus()
+
+func unhighlight():
+	$MarginContainer["theme_override_styles/panel"] = normal_theme_res
+
+
 ## Called when this command's delete button is pressed
 func _on_delete_pressed():
+	
+	if is_playing: return
+	
 	emit_signal("command_deleted", item_index)
 	self.queue_free()
 
 
 func _on_re_index_button_pressed():
 	
+	if is_playing: return
+	
 	re_index_button.visible = false
 	re_index_spin_box.visible = true
+	re_index_spin_box.grab_focus()
 
 
 func _on_re_index_value_value_changed(value):
+	
+	if is_playing: return
 	
 	var as_int: int = int(value)
 	
@@ -151,16 +165,11 @@ func _on_re_index_value_value_changed(value):
 	emit_signal("index_changed", item_index, as_int)
 
 
-func _on_mouse_entered():
+func _on_copy_cache_access_pressed() -> void:
 	
-	is_hovered = true
-	$MarginContainer["theme_override_styles/panel"] = hover_theme_res
+	DisplayServer.clipboard_set("$" + str(item_index))
 
 
-func _on_mouse_exited():
-	
-	is_hovered = false
-	
-	if !is_selected:
-	
-		$MarginContainer["theme_override_styles/panel"] = normal_theme_res
+func _on_re_index_value_focus_exited() -> void:
+	re_index_spin_box.visible = false
+	re_index_button.visible = true

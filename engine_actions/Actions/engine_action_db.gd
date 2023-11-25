@@ -110,7 +110,7 @@ static func type_enum_from_string(type_string: String):
 			return TYPE_ARRAY
 		"bool":
 			return TYPE_BOOL
-		"Variant":
+		_:
 			return TYPE_NIL
 
 
