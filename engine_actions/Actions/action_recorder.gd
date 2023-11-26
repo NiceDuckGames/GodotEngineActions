@@ -10,14 +10,7 @@ var save_action_dialog_res = preload("res://addons/engine_actions/UI/save_action
 var save_action_dialog = null
 
 
-## Called by the MainScreen "Actions" scene (actions_main_screen.gd)
-## in order to provide this script with a reference to the EditorPlugin.
-## Is used instead of `_ready()` since the moajority of this script
-## relies upon the EditorPlugin reference.
-func setup(plugin: EditorPlugin):
-	
-	editor_plugin = plugin
-	editor_inspector = plugin.get_editor_interface().get_inspector()
+func _ready() -> void:
 	
 	GodotSense.connect("property_changed", self._on_node_property_changed)
 	GodotSense.connect("node_added", self._on_node_created)
@@ -32,6 +25,16 @@ func setup(plugin: EditorPlugin):
 	
 	save_action_dialog = save_action_dialog_res.instantiate()
 	add_child(save_action_dialog)
+
+
+## Called by the MainScreen "Actions" scene (actions_main_screen.gd)
+## in order to provide this script with a reference to the EditorPlugin.
+## Is used instead of `_ready()` since the moajority of this script
+## relies upon the EditorPlugin reference.
+func setup(plugin: EditorPlugin):
+	
+	editor_plugin = plugin
+	editor_inspector = plugin.get_editor_interface().get_inspector()
 
 
 func start_recording():

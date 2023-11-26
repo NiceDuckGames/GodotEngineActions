@@ -26,13 +26,6 @@ func _on_godot_sense_stop():
 	GodotSense.connect("stop_listening", self._on_godot_sense_stop)
 
 
-func _on_godot_sense_start():
-	self.set_pressed_no_signal(true)
-
-func _on_godot_sense_stop():
-	self.set_pressed_no_signal(false)
-
-
 func _gui_input(event):
 	
 	if event is InputEventMouseButton:
