@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwcgenxv757k5"]
+[gd_scene load_steps=4 format=3 uid="uid://dwcgenxv757k5"]
 
 [ext_resource type="Script" path="res://addons/engine_actions/UI/command_item_parameter.gd" id="1_22y7p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dyjxa"]
+bg_color = Color(0.0823529, 0.0941176, 0.117647, 1)
+border_color = Color(0.498039, 0.376471, 0.329412, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pljv7"]
+bg_color = Color(0.0823529, 0.0941176, 0.117647, 1)
+border_color = Color(0.498039, 0.376471, 0.329412, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="CommandItemParameter" type="VBoxContainer"]
 size_flags_horizontal = 3
@@ -10,8 +26,74 @@ script = ExtResource("1_22y7p")
 layout_mode = 2
 text = "Param Name:"
 
-[node name="String" type="LineEdit" parent="."]
+[node name="Default" type="HBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="TypeSelect" type="MenuButton" parent="Default"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select Type..."
+item_count = 27
+popup/item_0/text = "Bool"
+popup/item_0/id = 1
+popup/item_1/text = "Integer"
+popup/item_1/id = 2
+popup/item_2/text = "Float"
+popup/item_2/id = 3
+popup/item_3/text = "String"
+popup/item_3/id = 4
+popup/item_4/text = "Object"
+popup/item_4/id = 24
+popup/item_5/text = "Vector2"
+popup/item_5/id = 5
+popup/item_6/text = "Vector2i"
+popup/item_6/id = 6
+popup/item_7/text = "Vector3"
+popup/item_7/id = 9
+popup/item_8/text = "Vector3i"
+popup/item_8/id = 10
+popup/item_9/text = "Bool"
+popup/item_9/id = 1
+popup/item_10/text = "Integer"
+popup/item_10/id = 2
+popup/item_11/text = "Float"
+popup/item_11/id = 3
+popup/item_12/text = "String"
+popup/item_12/id = 4
+popup/item_13/text = "Object"
+popup/item_13/id = 24
+popup/item_14/text = "Vector2"
+popup/item_14/id = 5
+popup/item_15/text = "Vector2i"
+popup/item_15/id = 6
+popup/item_16/text = "Vector3"
+popup/item_16/id = 9
+popup/item_17/text = "Vector3i"
+popup/item_17/id = 10
+popup/item_18/text = "Bool"
+popup/item_18/id = 1
+popup/item_19/text = "Integer"
+popup/item_19/id = 2
+popup/item_20/text = "Float"
+popup/item_20/id = 3
+popup/item_21/text = "String"
+popup/item_21/id = 4
+popup/item_22/text = "Object"
+popup/item_22/id = 24
+popup/item_23/text = "Vector2"
+popup/item_23/id = 5
+popup/item_24/text = "Vector2i"
+popup/item_24/id = 6
+popup/item_25/text = "Vector3"
+popup/item_25/id = 9
+popup/item_26/text = "Vector3i"
+popup/item_26/id = 10
+
+[node name="String" type="LineEdit" parent="Default"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Int" type="SpinBox" parent="."]
 visible = false
@@ -19,5 +101,65 @@ layout_mode = 2
 focus_mode = 2
 max_value = 999999.0
 
-[connection signal="text_changed" from="String" to="." method="_on_line_edit_text_changed"]
+[node name="Vector" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Vector"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="XContainer" type="HBoxContainer" parent="Vector/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Vector/VBoxContainer/XContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.529412, 0.396078, 0.345098, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_dyjxa")
+text = "  x  "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="YContainer" type="HBoxContainer" parent="Vector/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Vector/VBoxContainer/YContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.32549, 0.533333, 0.403922, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_pljv7")
+text = "  y  "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ZContainer" type="HBoxContainer" parent="Vector/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="Vector/VBoxContainer/ZContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.388235, 0.333333, 0.54902, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_pljv7")
+text = "  z  "
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Bool" type="CheckBox" parent="."]
+visible = false
+layout_mode = 2
+text = "False"
+alignment = 2
+
+[connection signal="text_changed" from="Default/String" to="." method="_on_line_edit_text_changed"]
 [connection signal="value_changed" from="Int" to="." method="_on_int_value_changed"]
+[connection signal="toggled" from="Bool" to="." method="_on_bool_toggled"]

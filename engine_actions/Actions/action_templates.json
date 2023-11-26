@@ -381,5 +381,120 @@
                 "int(5)"
             ]
         }
+    ],
+    "test scene": [
+        {
+            "command_name": "create_scene",
+            "params": [
+                "Node2D",
+                "Node2D",
+                "res://node_2d.tscn"
+            ]
+        },
+        {
+            "command_name": "open_scene",
+            "params": [
+                "res://node_2d.tscn"
+            ]
+        },
+        {
+            "command_name": "create_script",
+            "params": [
+                "res://node_2d.gd",
+                "extends Node2D\n\n\n# Called when the node enters the scene tree for the first time.\nfunc _ready() -> void:\n\tpass # Replace with function body.\n\n\n# Called every frame. 'delta' is the elapsed time since the previous frame.\nfunc _process(delta: float) -> void:\n\tpass\n"
+            ]
+        },
+        {
+            "command_name": "edit_script",
+            "params": [
+                "res://node_2d.gd"
+            ]
+        },
+        {
+            "command_name": "load_resource",
+            "params": [
+                "res://node_2d.gd"
+            ]
+        },
+        {
+            "command_name": "set_property",
+            "params": [
+                ".",
+                "script",
+                "$_"
+            ]
+        },
+        {
+            "command_name": "set_current_script_text",
+            "params": [
+                "extends Node2D\n\n\nfunc _ready() -> void:\n\tprint(\"Hello World\")\n"
+            ]
+        },
+        {
+            "command_name": "save_scene",
+            "params": [
+                ""
+            ]
+        },
+        {
+            "command_name": "load_resource",
+            "params": [
+                "res://icon.svg"
+            ]
+        },
+        {
+            "command_name": "set_property",
+            "params": [
+                "Sprite2D",
+                "texture",
+                "$_"
+            ]
+        },
+        {
+            "command_name": "save_scene",
+            "params": [
+                ""
+            ]
+        },
+        {
+            "command_name": "set_property",
+            "params": [
+                "Sprite2D",
+                "centered",
+                "bool(false)"
+            ]
+        },
+        {
+            "command_name": "set_property",
+            "params": [
+                "Sprite2D",
+                "offset",
+                "Vector2(11, 0)"
+            ]
+        },
+        {
+            "command_name": "save_scene",
+            "params": [
+                ""
+            ]
+        }
+    ],
+    "Test Types": [
+        {
+            "command_name": "add_node",
+            "params": [
+                ".",
+                "Node2D",
+                "Node2D"
+            ]
+        },
+        {
+            "command_name": "set_property",
+            "params": [
+                "Node2D",
+                "position",
+                "Vector2(52, 100)"
+            ]
+        }
     ]
 }

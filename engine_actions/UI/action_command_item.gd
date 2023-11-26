@@ -72,6 +72,7 @@ func set_param_value(param_index: int, param_value: Variant):
 	if param_values.is_empty(): return
 	
 	param_values[param_index] = param_value
+	param_items[param_index].set_type(typeof(param_value))
 	param_items[param_index].set_value(param_value)
 
 
@@ -104,7 +105,8 @@ func set_data(command_name: String, param_templates: Array, index: int):
 		
 		param_item_container.add_child(param_item)
 		
-		param_item.call_deferred("set_type", EngineActionDB.type_enum_from_string(param.type))
+		param_item.set_type(EngineActionDB.type_enum_from_string(param.type))
+#		param_item.call_deferred("set_type", EngineActionDB.type_enum_from_string(param.type))
 		
 		i += 1
 

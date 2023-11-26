@@ -105,7 +105,7 @@ func end_action_execution():
 
 
 func is_action_executing():
-	if currently_executing_action != null:
+	if is_instance_valid(currently_executing_action):
 		return true
 	return false
 
@@ -217,15 +217,12 @@ func save_scene(file_path: String = "") -> void:
 		packed.pack(editor_interface.get_edited_scene_root())
 		ResourceSaver.save(packed, scene_path)
 		
-#		editor_interface.save_scene()
 	else:
 		
 		var packed: PackedScene = PackedScene.new()
 		
 		packed.pack(editor_interface.get_edited_scene_root())
 		ResourceSaver.save(packed, file_path)
-		
-#		editor_interface.save_scene_as(file_path)
 	
 	wait(1.0)
 

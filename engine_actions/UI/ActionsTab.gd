@@ -175,14 +175,14 @@ func add_command_item(command_name: String, command_param_values: Array = []):
 	
 	var item = action_item_res.instantiate()
 	
-	item.set_data(command_name, param_templates, command_item_list.size())
-	item.set_max_index(command_item_list.size())
-	
 	item.connect("param_value_changed", self._on_param_changed)
 	item.connect("command_deleted", self._on_command_deleted)
 	item.connect("index_changed", self._on_command_index_changed)
 	
 	editor_item_container.add_child(item)
+	
+	item.set_data(command_name, param_templates, command_item_list.size())
+	item.set_max_index(command_item_list.size())
 	
 	for i in command_param_values.size():
 		
