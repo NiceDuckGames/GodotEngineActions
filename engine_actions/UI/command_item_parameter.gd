@@ -213,6 +213,33 @@ func set_type(type: int):
 			vec_z_container.visible = true
 			vec_z_editor.rounded = true
 		
+		TYPE_NODE_PATH:
+			
+			param_type = type
+			
+#			resource_editor.visible = false
+			type_select.visible = false
+			bool_editor.visible = false
+			float_editor.visible = false
+			int_editor.visible = false
+			str_editor.visible = true
+			type_select.visible = false
+			vec_editor.visible = false
+		
+		TYPE_STRING_NAME:
+			
+			param_type = type
+			
+#			resource_editor.visible = false
+			type_select.visible = false
+			bool_editor.visible = false
+			float_editor.visible = false
+			int_editor.visible = false
+			str_editor.visible = true
+			type_select.visible = false
+			vec_editor.visible = false
+			
+		
 		_:
 			
 			param_type = TYPE_NIL
@@ -262,8 +289,14 @@ func set_value(param_value: Variant):
 			vec_y_editor.set_value_no_signal(param_value.y)
 			vec_z_editor.set_value_no_signal(param_value.z)
 		
+		TYPE_NODE_PATH:
+			str_editor.text = str(param_value)
+		
+		TYPE_STRING_NAME:
+			str_editor.text = str(param_value)
+		
 		_:
-			print("unknown param type")
+			print("Unknown parameter type:" + str(typeof(param_value)) )
 
 
 func get_value():
@@ -297,6 +330,14 @@ func get_value():
 		TYPE_VECTOR3I:
 			var vec: Vector3i = Vector3i(vec_x_editor.value, vec_y_editor.value, vec_z_editor.value)
 			return vec
+		
+		TYPE_NODE_PATH:
+			
+			return NodePath(str_editor.text)
+		
+		TYPE_STRING_NAME:
+			
+			return StringName(str_editor.text)
 		
 		_:
 			return str_editor.text

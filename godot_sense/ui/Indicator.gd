@@ -22,9 +22,6 @@ func _on_godot_sense_start():
 func _on_godot_sense_stop():
 	self.set_pressed_no_signal(false)
 
-	GodotSense.connect("start_listening", self._on_godot_sense_start)
-	GodotSense.connect("stop_listening", self._on_godot_sense_stop)
-
 
 func _gui_input(event):
 	

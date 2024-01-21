@@ -56,6 +56,9 @@ func update():
 			var prop_path: String
 			
 			var edited_node = editor_plugin.get_editor_interface().get_selection().get_selected_nodes()[0]
+			
+			if !is_instance_valid(edited_node): continue
+			
 			var node_path = editor_plugin.get_editor_interface().get_edited_scene_root().get_path_to(edited_node)
 			
 			for prop in edited_node.get_property_list():
