@@ -5,3 +5,5 @@
 /**        export-ignore
 /addons    !export-ignore
 /addons/** !export-ignore
+/addons/gdvn/ export-ignore
+/addons/godot_sense export-ignore
