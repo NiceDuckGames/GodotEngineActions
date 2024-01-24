@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dheec3bf55jvo"]
-
-[ext_resource type="Script" path="res://addons/godot_sense/example_scene.gd" id="1_fygsa"]
-
-[node name="Example" type="Node"]
-script = ExtResource("1_fygsa")
-change_me = true
